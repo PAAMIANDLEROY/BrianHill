@@ -56,7 +56,9 @@ def main():
         Decision  🧪
         """
     )
-    st.markdown("     ")
+    st.subheader("Option A")
+    st.write(" Have more than 5/20 ?")
+    st.subheader("Option B")
 ##    st.markdown(
 ##        """
 ##        [<img src='data:image/png;base64,{}' class='img-fluid' width=25 height=25>](https://github.com/hi-paris/agent-theory) <small> agent-theory 0.0.1 | September 2022</small>""".format(
@@ -68,9 +70,11 @@ def main():
 
 
 
-    blue=3
-    red=40
-    grey=100-red-blue
+    values = st.slider('Select a range of values', 0.0, 100.0, (25.0, 75.0))
+    st.write('Values:', values)
+    print(values[0])
+    red=int(values[0])
+    grey=int(values[1])
 
     a=0.7
 
@@ -84,7 +88,8 @@ def main():
     # If a ListedColormap is used, the length of the bounds array must be
     # one greater than the length of the color list.  The bounds must be
     # monotonically increasing.
-    bounds = [0,blue,grey+blue,100]
+    bounds = [0,red,grey,100]
+    print(bounds)
     norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
     cb2 = mpl.colorbar.ColorbarBase(ax2, cmap=cmap,
                                     norm=norm,
@@ -92,9 +97,10 @@ def main():
                                     spacing='proportional',
                                     orientation='horizontal')
 
-    cb2.set_label('Option B, Urne contenant :')
+    #cb2.set_label('Option B, Urne contenant :')
     st.pyplot(fig)
-
+    choice=st.radio("Which option do you choose ?",('Option A', 'Option B'))
+    st.write("You choose option "+str(choice))
 
 
 
@@ -111,14 +117,14 @@ if __name__=='__main__':
     main()
 
 st.markdown(" ")
-st.markdown("### ** 👨🏼‍💻 Télécom Paris Researcher: **")
+st.markdown("### HEC Researcher Brian Hill " )
 #st.image(['images/1.png'], width=230,caption=["Vadim Malvone"])
 
-st.markdown('### Made by Hi!Paris')
+#st.markdown('# Made by Hi!Paris')
 #images = Image.open('./images/hi-paris.png')
 #st.image(images, width=250)
-st.write('    ')
-st.markdown('### Contributors:')
+#st.write('    ')
+#st.markdown('# Contributors:')
 #PA=Image.open('./images/PA.jpg')
 #Pierre=Image.open('./images/Pierre.jpg')
 #GAE=Image.open('./images/gaetan.png')
@@ -126,7 +132,7 @@ st.markdown('### Contributors:')
 
 
 
-st.markdown(f"####  Link to Project Website [here]({'https://github.com/hi-paris/agent-theory'}) 🚀 ")
+st.markdown(f"#### Made by Hi!Paris,Link to Project Website [here]({'https://github.com/hi-paris/agent-theory'}) 🚀 ")
 
 
 
