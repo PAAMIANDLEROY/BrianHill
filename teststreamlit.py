@@ -12,18 +12,22 @@ from htbuilder.units import percent, px
 from htbuilder.funcs import rgba, rgb
 import streamlit as st
 
-
+#import fonction and Script
+from experiment import *
+import algo as algo
 #config
 st.set_page_config(
-    page_title="Agent Theory", layout="wide", page_icon="images/flask.png"
+    page_title="Brian Hill", layout="wide", page_icon="images/flask.png"
 )
 def img_to_bytes(img_path):
     img_bytes = Path(img_path).read_bytes()
     encoded = base64.b64encode(img_bytes).decode()
     return encoded
 
-
-
+if 'cmpt_page' not in st.session_state:
+    st.session_state.cmpt_page=0
+if 'bet1' not in st.session_state:
+    st.session_state.bet1=[30,30]
 
         
 def main():
@@ -56,53 +60,18 @@ def main():
         Decision  🧪
         """
     )
-    st.subheader("Option A")
-    st.write(" Have more than 5/20 ?")
-    st.subheader("Option B")
-##    st.markdown(
-##        """
-##        [<img src='data:image/png;base64,{}' class='img-fluid' width=25 height=25>](https://github.com/hi-paris/agent-theory) <small> agent-theory 0.0.1 | September 2022</small>""".format(
-##            img_to_bytes("./images/github.png")
-##        ),
-##        unsafe_allow_html=True,
-##    )
-
-
-
-
-    values = st.slider('Select a range of values', 0.0, 100.0, (25.0, 75.0))
-    st.write('Values:', values)
-    print(values[0])
-    red=int(values[0])
-    grey=int(values[1])
-
-    a=0.7
-
-    fig = plt.figure(figsize=(8, 3))
-    ax2 = fig.add_axes([0.05, 0.475, 0.9, 0.15])
-    # The second example illustrates the use of a ListedColormap, a
-    # BoundaryNorm, and extended ends to show the "over" and "under"
-    # value colors.
-    cmap = mpl.colors.ListedColormap([[1.,0.,0.],[a,a,a],[0.,0.,1.]])
-
-    # If a ListedColormap is used, the length of the bounds array must be
-    # one greater than the length of the color list.  The bounds must be
-    # monotonically increasing.
-    bounds = [0,red,grey,100]
-    print(bounds)
-    norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
-    cb2 = mpl.colorbar.ColorbarBase(ax2, cmap=cmap,
-                                    norm=norm,
-                                    ticks=bounds,  # optional
-                                    spacing='proportional',
-                                    orientation='horizontal')
-
-    #cb2.set_label('Option B, Urne contenant :')
-    st.pyplot(fig)
-    choice=st.radio("Which option do you choose ?",('Option A', 'Option B'))
-    st.write("You choose option "+str(choice))
-
-
+    st.session_state.bet1=experiment_front(st.session_state.bet1)
+    opts=["A","B"]
+    def tirage(bet,opts):
+        tirage=np.random.randint(4,size=11)
+        for opt in tirage:
+            if opt==0:opts=["A","B"]
+            elif opt==1:opts=["B","A"]
+            elif opt==2:opts=["B","B"]
+            else :opts=["A","A"]
+        return algo.main(bet,opts)
+        
+    #st.session_state.bet1, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile=tirage(st.session_state.bet1,opts)
 
 
 
