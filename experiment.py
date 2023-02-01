@@ -43,16 +43,42 @@ def experiment_front(bet):
         st.write("You choose option "+str(choice))
     with col2:
         st.subheader("Option B")
-    ##    st.markdown(
-    ##        """
-    ##        [<img src='data:image/png;base64,{}' class='img-fluid' width=25 height=25>](https://github.com/hi-paris/agent-theory) <small> agent-theory 0.0.1 | September 2022</small>""".format(
-    ##            img_to_bytes("./images/github.png")
-    ##        ),
-    ##        unsafe_allow_html=True,
-    ##    )
+        blue=bet[1]
+        red=bet[0]
+        grey=100-blue-red
+        print("blue"+str(blue))
+        print("red"+str(red))
+        print("grey"+str(grey))
+        fig4 = plt.figure(figsize=(8, 3))
+        ax4 = fig4.add_axes([0.05, 0.475, 0.9, 0.15])
+        cmap = mpl.colors.ListedColormap([[1.,0.,0.],[a,a,a],[0.,0.,1.]])
+        bounds = [0,red,red+grey,100]
+        norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
+        cb4 = mpl.colorbar.ColorbarBase(ax4, cmap=cmap,
+                                        norm=norm,
+                                        ticks=bounds,  # optional
+                                        spacing='proportional',
+                                        orientation='horizontal')
+        st.pyplot(fig4)
+        st.write(" Red or Blue ?")
 
-
-
+        fig3, ax3=plt.subplots()
+        grid3=np.array([0.5,0.8])
+        grid_txt3=np.array([[0.3,0.8],[0.7,0.8]])
+        grid_txt_dollar3=np.array([[0.3,0.75],[0.7,0.75]])
+        x3, y3 = ([-0.2, 0, 0.2], [-0.1,0,-0.1])
+        line3 = mpl.lines.Line2D(x3 + grid3[0], y3 + grid3[1], lw=5., alpha=0.3)
+        label(grid3, "Line2D")
+        label(grid_txt3[0],"Blue")
+        label(grid_txt3[1],"Red")
+        label(grid_txt_dollar3[0],"0 €")
+        label(grid_txt_dollar3[1],"20 €")
+        ax3.add_line(line3)
+        #ax.set_title("plus ou moins que "+str(5)+"/20")
+        plt.axis('equal')
+        plt.axis('off')
+        plt.tight_layout()
+        st.pyplot(fig3)
 
         blue=bet[1]
         red=bet[0]
@@ -96,27 +122,7 @@ def experiment_front(bet):
 
 
 
-        
-        st.subheader("                  Option B")
-        st.write(" Red or Blue ?")
 
-        fig3, ax3=plt.subplots()
-        grid3=np.array([0.5,0.8])
-        grid_txt3=np.array([[0.3,0.8],[0.7,0.8]])
-        grid_txt_dollar3=np.array([[0.3,0.75],[0.7,0.75]])
-        x3, y3 = ([-0.2, 0, 0.2], [-0.1,0,-0.1])
-        line3 = mpl.lines.Line2D(x3 + grid3[0], y3 + grid3[1], lw=5., alpha=0.3)
-        label(grid3, "Line2D")
-        label(grid_txt3[0],"Blue")
-        label(grid_txt3[1],"Red")
-        label(grid_txt_dollar3[0],"0 €")
-        label(grid_txt_dollar3[1],"20 €")
-        ax3.add_line(line3)
-        #ax.set_title("plus ou moins que "+str(5)+"/20")
-        plt.axis('equal')
-        plt.axis('off')
-        plt.tight_layout()
-        st.pyplot(fig3)
 
     if st.button(str(st.session_state.cmpt_page)):
         pass
