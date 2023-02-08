@@ -34,8 +34,8 @@ if 'print_bet' not in st.session_state:
     st.session_state.print_bet=st.session_state.save_bet
 if 'histo' not in st.session_state:
     st.session_state.histo=[]
-
-
+if 'Marks' not in st.session_state:
+    st.session_state.Marks=[4,6,8,10,12,14,16,18]
 value_grey=[0.7]
 color_bar_init=[[1.,0.,0.],3*value_grey,[0.,0.,1.]]
 def up_cmpt():
@@ -48,6 +48,7 @@ def label(xy, text):
 def validation(values,opts):
     st.session_state.histo.append(values)
     bet, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile=algo.main(values,opts)
+    if len(st.session_state.Marks)>1:del st.session_state.Marks[0]
     bet=[int(bet[0]),int(bet[1])]
     
     return bet, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile
@@ -65,12 +66,12 @@ def experiment_front():
         x1, y1 = ([-0.2, 0, 0.2], [-0.1,0,-0.1])
         line1 = mpl.lines.Line2D(x1 + grid1[0], y1 + grid1[1], lw=5., alpha=0.3)
         label(grid1, "Line2D")
-        label(grid_txt1[0],"plus")
-        label(grid_txt1[1],"moins")
+        label(grid_txt1[0],"More")
+        label(grid_txt1[1],"Less")
         label(grid_txt_dollar1[0],"0 €")
         label(grid_txt_dollar1[1],"20 €")
         ax1.add_line(line1)
-        ax1.set_title("plus ou moins que "+str(5)+"/20")
+        ax1.set_title("More or less than "+str(st.session_state.Marks[0])+"/20")
         plt.axis('equal')
         plt.axis('off')
         plt.tight_layout()
@@ -87,7 +88,6 @@ def experiment_front():
         ax4 = fig4.add_axes([0.05, 0.475, 0.9, 0.15])
         cmap = mpl.colors.ListedColormap(color_bar_init)
         bounds = [0,red,red+grey,100]
-        print(bounds)
         norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
         cb4 = mpl.colorbar.ColorbarBase(ax4, cmap=cmap,
                                         norm=norm,
@@ -152,7 +152,7 @@ def experiment_front():
 
     if st.button(str(st.session_state.cmpt_page)):
         pass
-    opts=["A","B"]
+    opts=["A","A"]
     if st.button('Validation'):
         up_cmpt()
         st.session_state.save_bet=[values[0],100-values[1]]
