@@ -3,6 +3,7 @@
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import base64
+import numpy as np
 
 #Import group 2 (Streamlit)
 from pathlib import Path
@@ -13,7 +14,6 @@ from htbuilder.funcs import rgba, rgb
 import streamlit as st
 
 #import fonction and Script
-from experiment import *
 import algo as algo
 #config
 st.set_page_config(
@@ -24,25 +24,155 @@ def img_to_bytes(img_path):
     encoded = base64.b64encode(img_bytes).decode()
     return encoded
 
+
+
 if 'cmpt_page' not in st.session_state:
     st.session_state.cmpt_page=0
-if 'bet1' not in st.session_state:
-    st.session_state.bet1=[30,30]
+if 'save_bet' not in st.session_state:
+    st.session_state.save_bet=[30,30]
+if 'print_bet' not in st.session_state:
+    st.session_state.print_bet=st.session_state.save_bet
+if 'histo' not in st.session_state:
+    st.session_state.histo=[]
+
+
+value_grey=[0.7]
+color_bar_init=[[1.,0.,0.],3*value_grey,[0.,0.,1.]]
+def up_cmpt():
+    st.session_state.cmpt_page+=1
+
+
+def label(xy, text):
+    y = xy[1] - 0.15  # shift y-value for label so that it's below the artist
+    plt.text(xy[0], y, text, ha="center", family='sans-serif', size=14)
+def validation(values,opts):
+    st.session_state.histo.append(values)
+    bet, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile=algo.main(values,opts)
+    bet=[int(bet[0]),int(bet[1])]
+    
+    return bet, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile
+
+def experiment_front():
+    col1,col3, col2 = st.columns([2,1,2])
+    with col1: #parameter : Value_to_win, Win_with_more_or_less, Mark, 
+        st.subheader("                  Option A")
+        #st.write(" Have more than 5/20 ?")
+
+        fig1, ax1=plt.subplots()
+        grid1=np.array([0.5,0.8])
+        grid_txt1=np.array([[0.3,0.8],[0.7,0.8]])
+        grid_txt_dollar1=np.array([[0.3,0.75],[0.7,0.75]])
+        x1, y1 = ([-0.2, 0, 0.2], [-0.1,0,-0.1])
+        line1 = mpl.lines.Line2D(x1 + grid1[0], y1 + grid1[1], lw=5., alpha=0.3)
+        label(grid1, "Line2D")
+        label(grid_txt1[0],"plus")
+        label(grid_txt1[1],"moins")
+        label(grid_txt_dollar1[0],"0 €")
+        label(grid_txt_dollar1[1],"20 €")
+        ax1.add_line(line1)
+        ax1.set_title("plus ou moins que "+str(5)+"/20")
+        plt.axis('equal')
+        plt.axis('off')
+        plt.tight_layout()
+        st.pyplot(fig1)
+    with col3:
+        choice=st.radio("Which option do you choose ?",('Option A', 'Option B'),horizontal=True)
+        st.write("You choose option "+str(choice))
+    with col2:
+        st.subheader("Option B")
+        blue=st.session_state.save_bet[1]
+        red=st.session_state.save_bet[0]
+        grey=100-blue-red
+        fig4 = plt.figure(figsize=(8, 3))
+        ax4 = fig4.add_axes([0.05, 0.475, 0.9, 0.15])
+        cmap = mpl.colors.ListedColormap(color_bar_init)
+        bounds = [0,red,red+grey,100]
+        print(bounds)
+        norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
+        cb4 = mpl.colorbar.ColorbarBase(ax4, cmap=cmap,
+                                        norm=norm,
+                                        ticks=bounds,  # optional
+                                        spacing='proportional',
+                                        orientation='horizontal')
+        st.pyplot(fig4)
+        
+        st.write(" Red or Blue ?")
+
+        fig3, ax3=plt.subplots()
+        grid3=np.array([0.5,0.8])
+        grid_txt3=np.array([[0.3,0.8],[0.7,0.8]])
+        grid_txt_dollar3=np.array([[0.3,0.75],[0.7,0.75]])
+        x3, y3 = ([-0.2, 0, 0.2], [-0.1,0,-0.1])
+        line3 = mpl.lines.Line2D(x3 + grid3[0], y3 + grid3[1], lw=5., alpha=0.3)
+        label(grid3, "Line2D")
+        label(grid_txt3[0],"Blue")
+        label(grid_txt3[1],"Red")
+        label(grid_txt_dollar3[0],"0 €")
+        label(grid_txt_dollar3[1],"20 €")
+        ax3.add_line(line3)
+        #ax.set_title("plus ou moins que "+str(5)+"/20")
+        plt.axis('equal')
+        plt.axis('off')
+        plt.tight_layout()
+        st.pyplot(fig3)
+
+
+    fig4 = plt.figure(figsize=(10,1))
+    ax4 = fig4.add_axes([0.05, 0.475, 0.9, 0.15])
+    cmap = mpl.colors.ListedColormap(color_bar_init)
+    bounds = [0,red,red+grey,100]
+    norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
+    cb4 = mpl.colorbar.ColorbarBase(ax4, cmap=cmap,
+                                    norm=norm,
+                                    ticks=bounds,  # optional
+                                    spacing='proportional',
+                                    orientation='horizontal')
+    st.pyplot(fig4)
+    values = st.slider('Select a range of values', 0, 100, (red,red+grey)) #int input => int output
+    values=[values[0],100-values[1]]
+    def change_display(x):
+        return x*100
+    #values = st.select_slider('Select a range of values', options=list(range(100)),value=[10,20],format_func=change_display)
+
+    fig2 = plt.figure(figsize=(10, 1))
+    ax2 = fig2.add_axes([0.05, 0.475, 0.9, 0.15])
+    cmap = mpl.colors.ListedColormap(color_bar_init)
+    bounds = 100-np.array([0,red,red+grey,100])
+    norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
+    cb2 = mpl.colorbar.ColorbarBase(ax2, cmap=cmap,
+                                    norm=norm,
+                                    ticks=bounds,  # optional
+                                    spacing='proportional',
+                                    orientation='horizontal')
+    st.pyplot(fig2)
+
+
+
+
+
+    if st.button(str(st.session_state.cmpt_page)):
+        pass
+    opts=["A","B"]
+    if st.button('Validation'):
+        up_cmpt()
+        st.session_state.save_bet=[values[0],100-values[1]]
+        bet, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile=validation(values,opts)
+        st.session_state.save_bet=bet
+        st.experimental_rerun()
+    return 0
 
         
+        
+
+
+
+
+
+
+
+
+
 def main():
-##    def max_width():
-##        max_width_str = f"max-width: 1000px;"
-##	st.markdown(f"""
-##        <style>
-##        .reportview-container .main .block-container{{
-##            {max_width_str}
-##        }}
-##        </style>
-##        """,
-##            unsafe_allow_html=True,
-##        )
-    # Hide the Streamlit header and footer
     def hide_header_footer():
         hide_streamlit_style = """
                     <style>
@@ -50,9 +180,7 @@ def main():
                     </style>
                     """
         st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-    # increases the width of the text and tables/figures
-##    _max_width_()
-    # hide the footer
+
     hide_header_footer()
     st.markdown("# Brian Hill 🖥")
     st.subheader(
@@ -60,17 +188,13 @@ def main():
         Decision  🧪
         """
     )
-    st.session_state.bet1=experiment_front(st.session_state.bet1)
-    opts=["A","B"]
-    def tirage(bet,opts):
-        tirage=np.random.randint(4,size=11)
-        for opt in tirage:
-            if opt==0:opts=["A","B"]
-            elif opt==1:opts=["B","A"]
-            elif opt==2:opts=["B","B"]
-            else :opts=["A","A"]
-        return algo.main(bet,opts)
-        
+    
+    values=experiment_front()
+
+
+    
+
+
     #st.session_state.bet1, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile=tirage(st.session_state.bet1,opts)
 
 
