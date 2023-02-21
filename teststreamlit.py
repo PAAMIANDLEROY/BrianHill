@@ -156,6 +156,7 @@ def experiment_front():
                                         ticks=bounds,  # optional
                                         spacing='proportional',
                                         orientation='horizontal')
+        ax4a.axis('off')
         st.pyplot(fig4a)
         fig4b = plt.figure(figsize=(10,1))
         ax4b = fig4b.add_axes([0.05, 0.475, 0.9, 0.15])
@@ -167,6 +168,7 @@ def experiment_front():
                                         ticks=bounds,  # optional
                                         spacing='proportional',
                                         orientation='horizontal')
+        ax4b.axis('off')
         st.pyplot(fig4b)
         values = st.slider('Select a range of values', 0, 100, (red,red+grey)) #int input => int output
         values=[values[0],100-values[1]]
@@ -183,6 +185,7 @@ def experiment_front():
                                         ticks=bounds,  # optional
                                         spacing='proportional',
                                         orientation='horizontal')
+        ax2a.axis('off')
         st.pyplot(fig4a)
         fig2b = plt.figure(figsize=(10, 1))
         ax2b = fig2b.add_axes([0.05, 0.475, 0.9, 0.15])
@@ -194,6 +197,7 @@ def experiment_front():
                                         ticks=bounds,  # optional
                                         spacing='proportional',
                                         orientation='horizontal')
+        ax2b.axis('off')
         st.pyplot(fig2b)
     else:
         pass
