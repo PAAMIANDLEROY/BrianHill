@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import base64
 import numpy as np
+from pywaffle import Waffle as Wf
 
 #Import group 2 (Streamlit)
 from pathlib import Path
@@ -34,10 +35,17 @@ if 'print_bet' not in st.session_state:
     st.session_state.print_bet=st.session_state.save_bet
 if 'histo' not in st.session_state:
     st.session_state.histo=[]
-if 'Marks' not in st.session_state:
-    st.session_state.Marks=[4,6,8,10,12,14,16,18]
+if 'histo_opts' not in st.session_state:
+    st.session_state.histo_opts=[]
 value_grey=[0.7]
-color_bar_init=[[1.,0.,0.],3*value_grey,[0.,0.,1.]]
+color_Green='#54cc33'
+color_Yellow='#e4e805'
+color_Red='#ff0000'
+color_Blue='#0000ff'
+color_Grey='#b3b3b3'
+color_White='#ffffff'
+#color_bar_init=[[1.,0.,0.],3*value_grey,[0.,0.,1.]]
+
 def up_cmpt():
     st.session_state.cmpt_page+=1
 
@@ -58,42 +66,61 @@ def experiment_front():
     with col1: #parameter : Value_to_win, Win_with_more_or_less, Mark, 
         st.subheader("                  Option A")
         #st.write(" Have more than 5/20 ?")
-
+        fig3 = plt.figure(
+            FigureClass=Wf,
+            rows=10,
+            columns=10,  # Either rows or columns could be omitted
+            values=[87, 13],
+            colors=[color_Green,color_Yellow],
+            characters='⬤',
+            font_size=12)
+        st.pyplot(fig3)
         fig1, ax1=plt.subplots()
         grid1=np.array([0.5,0.8])
         grid_txt1=np.array([[0.3,0.8],[0.7,0.8]])
         grid_txt_dollar1=np.array([[0.3,0.75],[0.7,0.75]])
         x1, y1 = ([-0.2, 0, 0.2], [-0.1,0,-0.1])
         line1 = mpl.lines.Line2D(x1 + grid1[0], y1 + grid1[1], lw=5., alpha=0.3)
-        label(grid1, "Line2D")
-        label(grid_txt1[0],"More")
-        label(grid_txt1[1],"Less")
-        label(grid_txt_dollar1[0],"0 €")
-        label(grid_txt_dollar1[1],"20 €")
+        label(grid1, " ")
+        label(grid_txt1[0],"Green")
+        label(grid_txt1[1],"Yellow")
+        value_money=st.session_state.cmpt_page%2*20
+        label(grid_txt_dollar1[0],str(value_money)+"€")
+        label(grid_txt_dollar1[1],str(20-value_money)+"€")
         ax1.add_line(line1)
-        ax1.set_title("More or less than "+str(st.session_state.Marks[0])+"/20")
         plt.axis('equal')
         plt.axis('off')
         plt.tight_layout()
         st.pyplot(fig1)
     with col3:
         choice=st.radio("Which option do you choose ?",('Option A', 'Option B'),horizontal=True)
+        choice='A' if choice=='Option A' else 'B'
         st.write("You choose option "+str(choice))
     with col2:
         st.subheader("Option B")
         blue=st.session_state.save_bet[1]
         red=st.session_state.save_bet[0]
+        value=[red,blue]
         grey=100-blue-red
-        fig4 = plt.figure(figsize=(8, 3))
-        ax4 = fig4.add_axes([0.05, 0.475, 0.9, 0.15])
-        cmap = mpl.colors.ListedColormap(color_bar_init)
-        bounds = [0,red,red+grey,100]
-        norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
-        cb4 = mpl.colorbar.ColorbarBase(ax4, cmap=cmap,
-                                        norm=norm,
-                                        ticks=bounds,  # optional
-                                        spacing='proportional',
-                                        orientation='horizontal')
+        
+##      fig4 = plt.figure(figsize=(8, 3))
+        fig4 = plt.figure(
+            FigureClass=Wf,
+            rows=10,
+            columns=10,  # Either rows or columns could be omitted
+            values=[red,grey,blue],
+            colors=[color_Red,color_Grey,color_Blue],
+            characters='⬤',
+            font_size=12)
+##        ax4 = fig4.add_axes([0.05, 0.475, 0.9, 0.15])
+##        cmap = mpl.colors.ListedColormap(color_bar_init)
+##        bounds = [0,red,red+grey,100]
+##        norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
+##        cb4 = mpl.colorbar.ColorbarBase(ax4, cmap=cmap,
+##                                        norm=norm,
+##                                        ticks=bounds,  # optional
+##                                        spacing='proportional',
+##                                        orientation='horizontal')
         st.pyplot(fig4)
         
         st.write(" Red or Blue ?")
@@ -104,11 +131,12 @@ def experiment_front():
         grid_txt_dollar3=np.array([[0.3,0.75],[0.7,0.75]])
         x3, y3 = ([-0.2, 0, 0.2], [-0.1,0,-0.1])
         line3 = mpl.lines.Line2D(x3 + grid3[0], y3 + grid3[1], lw=5., alpha=0.3)
-        label(grid3, "Line2D")
+        label(grid3, " ")
         label(grid_txt3[0],"Blue")
         label(grid_txt3[1],"Red")
-        label(grid_txt_dollar3[0],"0 €")
-        label(grid_txt_dollar3[1],"20 €")
+        value_money=st.session_state.cmpt_page%2*20
+        label(grid_txt_dollar3[0],str(value_money)+"€")
+        label(grid_txt_dollar3[1],str(20-value_money)+"€")
         ax3.add_line(line3)
         #ax.set_title("plus ou moins que "+str(5)+"/20")
         plt.axis('equal')
@@ -116,49 +144,90 @@ def experiment_front():
         plt.tight_layout()
         st.pyplot(fig3)
 
-
-    fig4 = plt.figure(figsize=(10,1))
-    ax4 = fig4.add_axes([0.05, 0.475, 0.9, 0.15])
-    cmap = mpl.colors.ListedColormap(color_bar_init)
-    bounds = [0,red,red+grey,100]
-    norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
-    cb4 = mpl.colorbar.ColorbarBase(ax4, cmap=cmap,
-                                    norm=norm,
-                                    ticks=bounds,  # optional
-                                    spacing='proportional',
-                                    orientation='horizontal')
-    st.pyplot(fig4)
-    values = st.slider('Select a range of values', 0, 100, (red,red+grey)) #int input => int output
-    values=[values[0],100-values[1]]
-    def change_display(x):
-        return x*100
-    #values = st.select_slider('Select a range of values', options=list(range(100)),value=[10,20],format_func=change_display)
-
-    fig2 = plt.figure(figsize=(10, 1))
-    ax2 = fig2.add_axes([0.05, 0.475, 0.9, 0.15])
-    cmap = mpl.colors.ListedColormap(color_bar_init)
-    bounds = 100-np.array([0,red,red+grey,100])
-    norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
-    cb2 = mpl.colorbar.ColorbarBase(ax2, cmap=cmap,
-                                    norm=norm,
-                                    ticks=bounds,  # optional
-                                    spacing='proportional',
-                                    orientation='horizontal')
-    st.pyplot(fig2)
-
-
-
-
-
-    if st.button(str(st.session_state.cmpt_page)):
+    if st.session_state.cmpt_page>=2:
+        
+        fig4a = plt.figure(figsize=(10,1))
+        ax4a = fig4a.add_axes([0.05, 0.475, 0.9, 0.15])
+        cmap = mpl.colors.ListedColormap([color_Red,color_White])
+        bounds = [0,red,100]
+        norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
+        cb4a = mpl.colorbar.ColorbarBase(ax4a, cmap=cmap,
+                                        norm=norm,
+                                        ticks=bounds,  # optional
+                                        spacing='proportional',
+                                        orientation='horizontal')
+        st.pyplot(fig4a)
+        fig4b = plt.figure(figsize=(10,1))
+        ax4b = fig4b.add_axes([0.05, 0.475, 0.9, 0.15])
+        cmap = mpl.colors.ListedColormap([color_White,color_Blue])
+        bounds = [0,red+grey,100]
+        norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
+        cb4b = mpl.colorbar.ColorbarBase(ax4b, cmap=cmap,
+                                        norm=norm,
+                                        ticks=bounds,  # optional
+                                        spacing='proportional',
+                                        orientation='horizontal')
+        st.pyplot(fig4b)
+        values = st.slider('Select a range of values', 0, 100, (red,red+grey)) #int input => int output
+        values=[values[0],100-values[1]]
+        def change_display(x):
+            return x*100
+        #values = st.select_slider('Select a range of values', options=list(range(100)),value=[10,20],format_func=change_display)
+        fig2a = plt.figure(figsize=(10,1))
+        ax2a = fig2a.add_axes([0.05, 0.475, 0.9, 0.15])
+        cmap = mpl.colors.ListedColormap([color_Red,color_White])
+        bounds = [0,red+grey,100]
+        norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
+        cb4a = mpl.colorbar.ColorbarBase(ax4a, cmap=cmap,
+                                        norm=norm,
+                                        ticks=bounds,  # optional
+                                        spacing='proportional',
+                                        orientation='horizontal')
+        st.pyplot(fig4a)
+        fig2b = plt.figure(figsize=(10, 1))
+        ax2b = fig2b.add_axes([0.05, 0.475, 0.9, 0.15])
+        cmap = mpl.colors.ListedColormap([color_White,color_Blue])
+        bounds = 100-np.array([0,red,100])
+        norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
+        cb2b = mpl.colorbar.ColorbarBase(ax2b, cmap=cmap,
+                                        norm=norm,
+                                        ticks=bounds,  # optional
+                                        spacing='proportional',
+                                        orientation='horizontal')
+        st.pyplot(fig2b)
+    else:
         pass
-    opts=["A","A"]
-    if st.button('Validation'):
-        up_cmpt()
-        st.session_state.save_bet=[values[0],100-values[1]]
-        bet, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile=validation(values,opts)
-        st.session_state.save_bet=bet
-        st.experimental_rerun()
+    
+
+
+
+
+
+    
+    col1,col3, col2 = st.columns([2.8,1,2])
+    with col1:
+        pass
+    with col3:
+        if st.button(str(st.session_state.cmpt_page)):
+            pass
+        opts=["A","A"]
+        button_val=st.button('Validation')
+        if button_val:
+            up_cmpt()
+            if st.session_state.cmpt_page%2==0:
+                button_val=False
+                opts=[st.session_state.histo_opts[-1],choice]
+                st.session_state.histo_opts.append(choice)
+                
+                
+                st.session_state.save_bet=[values[0],100-values[1]]
+                bet, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile=validation(values,opts)
+                st.session_state.save_bet=bet
+            else:
+                st.session_state.histo_opts.append(choice)
+            st.experimental_rerun()
+    with col2:
+        pass
     return 0
 
         
