@@ -3,3 +3,4 @@ htbuilder
 numpy
 scipy
 sympy
+pywaffle
