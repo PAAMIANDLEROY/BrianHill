@@ -56,7 +56,6 @@ def label(xy, text):
 def validation(values,opts):
     st.session_state.histo.append(values)
     bet, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile=algo.main(values,opts)
-    if len(st.session_state.Marks)>1:del st.session_state.Marks[0]
     bet=[int(bet[0]),int(bet[1])]
     
     return bet, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile
@@ -123,7 +122,7 @@ def experiment_front():
 ##                                        orientation='horizontal')
         st.pyplot(fig4)
         
-        st.write(" Red or Blue ?")
+        #st.write(" Red or Blue ?")
 
         fig3, ax3=plt.subplots()
         grid3=np.array([0.5,0.8])
@@ -170,10 +169,10 @@ def experiment_front():
                                         orientation='horizontal')
         ax4b.axis('off')
         st.pyplot(fig4b)
-        values = st.slider('Select a range of values', 0, 100, (red,red+grey)) #int input => int output
-        values=[values[0],100-values[1]]
-        def change_display(x):
-            return x*100
+        values_recup = st.slider('Select a range of values', 0, 100, (red,red+grey)) #int input => int output
+        values=[values_recup[0],100-values_recup[1]]
+        #def change_display(x):
+        #    return x*100
         #values = st.select_slider('Select a range of values', options=list(range(100)),value=[10,20],format_func=change_display)
         fig2a = plt.figure(figsize=(10,1))
         ax2a = fig2a.add_axes([0.05, 0.475, 0.9, 0.15])
@@ -219,6 +218,9 @@ def experiment_front():
         if button_val:
             up_cmpt()
             if st.session_state.cmpt_page%2==0:
+                if 'values' not in vars():
+                    values=st.session_state.save_bet
+                print(values)
                 button_val=False
                 opts=[st.session_state.histo_opts[-1],choice]
                 st.session_state.histo_opts.append(choice)
@@ -262,7 +264,7 @@ def main():
         """
     )
     
-    values=experiment_front()
+    values_return=experiment_front()
 
 
     
