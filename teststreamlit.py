@@ -5,7 +5,7 @@ import matplotlib as mpl
 import base64
 import numpy as np
 from pywaffle import Waffle as Wf
-
+import class_range_slider as crs
 #Import group 2 (Streamlit)
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
@@ -13,7 +13,8 @@ from htbuilder import HtmlElement, div, ul, li, br, hr, a, p, img, styles, class
 from htbuilder.units import percent, px
 from htbuilder.funcs import rgba, rgb
 import streamlit as st
-
+import streamlit.components.v1 as components
+import mpld3
 #import fonction and Script
 import algo as algo
 #config
@@ -25,10 +26,21 @@ def img_to_bytes(img_path):
     encoded = base64.b64encode(img_bytes).decode()
     return encoded
 
+def RSlid():
+    a=0.7
+    color_left='green'
+    color_middle='red'
+    color_right='blue'
+    ax_slider=plt.axes([0.1,0.5,0.75,0.3])#, facecolor=axcolor)
+    defaults={'facecolor': 'blue', 'edgecolor': 'red', 'size': 30}
+    valinit=[30,75]
+    sfreq = RangeSlider(ax_slider, 'DoubleSlider', 1, 100,valstep=1,valinit=valinit,handle_style=defaults,color_left=color_left,color_middle=color_middle,color_right=color_right)#([a,a,a],[0.,0.,1.]))
+    plt.show()
+
 
 
 if 'cmpt_page' not in st.session_state:
-    st.session_state.cmpt_page=0
+    st.session_state.cmpt_page=-2
 if 'save_bet' not in st.session_state:
     st.session_state.save_bet=[30,30]
 if 'print_bet' not in st.session_state:
@@ -44,6 +56,7 @@ color_Red='#ff0000'
 color_Blue='#0000ff'
 color_Grey='#b3b3b3'
 color_White='#ffffff'
+Winning_amount=20
 #color_bar_init=[[1.,0.,0.],3*value_grey,[0.,0.,1.]]
 
 def up_cmpt():
@@ -83,7 +96,7 @@ def experiment_front():
         label(grid1, " ")
         label(grid_txt1[0],"Green")
         label(grid_txt1[1],"Yellow")
-        value_money=st.session_state.cmpt_page%2*20
+        value_money=st.session_state.cmpt_page%2*Winning_amount
         label(grid_txt_dollar1[0],str(value_money)+"€")
         label(grid_txt_dollar1[1],str(20-value_money)+"€")
         ax1.add_line(line1)
@@ -131,9 +144,9 @@ def experiment_front():
         x3, y3 = ([-0.2, 0, 0.2], [-0.1,0,-0.1])
         line3 = mpl.lines.Line2D(x3 + grid3[0], y3 + grid3[1], lw=5., alpha=0.3)
         label(grid3, " ")
-        label(grid_txt3[0],"Blue")
-        label(grid_txt3[1],"Red")
-        value_money=st.session_state.cmpt_page%2*20
+        label(grid_txt3[0],"Red")
+        label(grid_txt3[1],"Blue")
+        value_money=st.session_state.cmpt_page%2*Winning_amount
         label(grid_txt_dollar3[0],str(value_money)+"€")
         label(grid_txt_dollar3[1],str(20-value_money)+"€")
         ax3.add_line(line3)
@@ -169,8 +182,21 @@ def experiment_front():
                                         orientation='horizontal')
         ax4b.axis('off')
         st.pyplot(fig4b)
+        #a=0.7
+        #color_left='green'
+        #color_middle='red'
+        #color_right='blue'
+       # fig_slider = plt.figure(figsize=(10,1))
+        #ax_slider=fig_slider.add_axes([0.1,0.5,0.75,0.3])#, facecolor=axcolor)
+        #defaults={'facecolor': 'blue', 'edgecolor': 'red', 'size': 30}
+        #valinit=[30,75]
+        #sfreq = crs.RangeSlider(ax_slider, 'DoubleSlider', 1, 100,valstep=1,valinit=valinit,handle_style=defaults,color_left=color_left,color_middle=color_middle,color_right=color_right)#([a,a,a],[0.,0.,1.]))
+        #fig_html = mpld3.fig_to_html(fig_slider)
+        #components.html(fig_html, height=600)
+        #st.pyplot(fig_slider,clear_figure=True)
         values_recup = st.slider('Select a range of values', 0, 100, (red,red+grey)) #int input => int output
         values=[values_recup[0],100-values_recup[1]]
+        st.write(' ')
         #def change_display(x):
         #    return x*100
         #values = st.select_slider('Select a range of values', options=list(range(100)),value=[10,20],format_func=change_display)
@@ -220,14 +246,15 @@ def experiment_front():
             if st.session_state.cmpt_page%2==0:
                 if 'values' not in vars():
                     values=st.session_state.save_bet
-                print(values)
+                #print(values)
                 button_val=False
                 opts=[st.session_state.histo_opts[-1],choice]
                 st.session_state.histo_opts.append(choice)
-                
-                
+                print(st.session_state.histo_opts)
+                print(choice)
                 st.session_state.save_bet=[values[0],100-values[1]]
                 bet, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile=validation(values,opts)
+                #print(finished)
                 st.session_state.save_bet=bet
             else:
                 st.session_state.histo_opts.append(choice)
@@ -238,11 +265,22 @@ def experiment_front():
 
         
         
-
-
-
-
-
+def welcome():
+    if st.button('Validation '):
+        up_cmpt()
+        st.experimental_rerun()
+    if st.session_state.cmpt_page==-2:
+        id_number=st.text_input('Quel est votre identifiant?')
+        name=st.text_input('Quel est votre prénom et votre nom?')
+        subject=st.text_input('Subject')
+        age=st.slider('Quel est votre age?',18,125)
+        gender=st.radio(" Quel est votre genre ?",('Homme','Femme','Autre','Préfère ne pas dire'))
+    if st.session_state.cmpt_page==-1:
+        st.write(str(st.session_state.cmpt_page))
+        st.write('inserer une vidéo')   
+    if st.button('Validation'):
+        up_cmpt()
+        st.experimental_rerun()
 
 
 
@@ -263,8 +301,10 @@ def main():
         Decision  🧪
         """
     )
-    
-    values_return=experiment_front()
+    if st.session_state.cmpt_page>=0:
+        values_return=experiment_front()
+    else:
+        welcome()
 
 
     
