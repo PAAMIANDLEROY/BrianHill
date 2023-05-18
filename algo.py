@@ -13,7 +13,6 @@ X = Symbol('x')
 
 # Point de départ
 
-bet = [30,30] # bet[0] -> blue # bet[1] -> red
 def init():
 # Vecteurs de résultats: objectif, nombre d'iteration et point elicité
     objv = []
@@ -32,7 +31,7 @@ def init():
     dz2 = []
     az1h = []
     az2h = []
-    maxiter = 12
+    maxiter = int(12/2)
     retrunOnlyAtLogs = True
 
     sup_info = [""]
@@ -600,23 +599,12 @@ def log(*argsv):
 
 
 def zone(opts):
+    print('zone')
+    print(opts)
     if(opts==["A","B"]): czone="az1"
     elif(opts==["B","A"]): czone="az2"
     elif(opts==["B","B"]): czone="dz1"
     elif(opts==["A","A"]): czone="dz2"
     return czone
 
-bet=[30,50]
-opts=["A","A"]
 
-def tirage(bet):
-    tirage=np.random.randint(4,size=11)
-    for opt in tirage:
-        if opt==0:opts=["A","B"]
-        elif opt==1:opts=["B","A"]
-        elif opt==2:opts=["B","B"]
-        else :opts=["A","A"]
-        bet, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile=main(bet,opts)
-
-
-tirage(bet)

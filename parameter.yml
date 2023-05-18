@@ -1,0 +1,52 @@
+Number_of_participant: 100
+Number_groups: 2
+Maximum_steps: 12
+
+Number_ball_green_yellow: 100
+Number_green: 76
+Winning_Amount: 20
+Number_ball_red_blue: 100
+Number_red: 30
+Number_blue: 30
+Opt1:
+    Number_ball_green_yellow: 100
+    Number_green: 76
+    Winning_Amount: 20
+    Number_ball_red_blue: 100
+    Number_red: 30
+    Number_blue: 30
+Opt2:
+    Number_ball_green_yellow: 100
+    Number_green: 76
+    Winning_Amount: 20
+    Number_ball_red_blue: 100
+    Number_red: 30
+    Number_blue: 30
+Opt3:
+    Number_ball_green_yellow: 100
+    Number_green: 76
+    Winning_Amount: 20
+    Number_ball_red_blue: 100
+    Number_red: 30
+    Number_blue: 30
+Opt4:
+    Number_ball_green_yellow: 100
+    Number_green: 76
+    Winning_Amount: 20
+    Number_ball_red_blue: 100
+    Number_red: 30
+    Number_blue: 30
+Opt5:
+    Number_ball_green_yellow: 100
+    Number_green: 76
+    Winning_Amount: 20
+    Number_ball_red_blue: 100
+    Number_red: 30
+    Number_blue: 30
+Opt6:
+    Number_ball_green_yellow: 100
+    Number_green: 76
+    Winning_Amount: 20
+    Number_ball_red_blue: 100
+    Number_red: 30
+    Number_blue: 30
