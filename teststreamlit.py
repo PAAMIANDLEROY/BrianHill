@@ -1,5 +1,5 @@
 #Import Part
-import yaml
+#####import yaml #beug with streamlit. Need correction
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import base64
@@ -327,14 +327,14 @@ def welcome(Winning_amount,Number_of_ball,Freq_green):
         st.write('Thanks to Hi! PARIS')
 
     return (Winning_amount,Number_of_ball,Freq_green)
-
-def load_yaml():
-    with open('parameter.yml', 'r', encoding='utf8') as file:
-        data = yaml.safe_load(file)
-    return data
+#beug with streamlit. Need correction
+#def load_yaml():
+#    with open('parameter.yml', 'r', encoding='utf8') as file:
+#        data = yaml.safe_load(file)
+#    return data
 
 def main():
-    data=load_yaml()
+    #data=load_yaml()#beug with streamlit. Need correction
     if 'pers_info' not in st.session_state:
       st.session_state.pers_info=[]
 
