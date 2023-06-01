@@ -15,6 +15,7 @@ X = Symbol('x')
 
 def init():
 # Vecteurs de résultats: objectif, nombre d'iteration et point elicité
+    global objv,itv,betv,dzv,vhypo,phypo,vstop,az1,az2,dz1,dz2,az1h,az2h,maxiter,retrunOnlyAtLogs,sup_info,beforeMaxIter,useWhile,useReturn,returnAtEachBet
     objv = []
     itv = []
     betv = []
@@ -40,9 +41,9 @@ def init():
     useWhile=False
     useReturn = not useWhile
     returnAtEachBet = not useWhile
-    return objv,itv,betv,dzv,vhypo,phypo,vstop,az1,az2,dz1,dz2,az1h,az2h,maxiter,retrunOnlyAtLogs,sup_info,beforeMaxIter,useWhile,useReturn,returnAtEachBet
-objv,itv,betv,dzv,vhypo,phypo,vstop,az1,az2,dz1,dz2,az1h,az2h,maxiter,retrunOnlyAtLogs,sup_info,beforeMaxIter,useWhile,useReturn,returnAtEachBet=init()
-
+#    return objv,itv,betv,dzv,vhypo,phypo,vstop,az1,az2,dz1,dz2,az1h,az2h,maxiter,retrunOnlyAtLogs,sup_info,beforeMaxIter,useWhile,useReturn,returnAtEachBet
+#objv,itv,betv,dzv,vhypo,phypo,vstop,az1,az2,dz1,dz2,az1h,az2h,maxiter,retrunOnlyAtLogs,sup_info,beforeMaxIter,useWhile,useReturn,returnAtEachBet=init()
+init()
 
 def result(bet, finished=0, finishedBefMaxIter=None):
     sumlen = len(az1) + len(az2) + len(dz1) + len(dz2)
@@ -599,12 +600,13 @@ def log(*argsv):
 
 
 def zone(opts):
-    print('zone')
-    print(opts)
     if(opts==["A","B"]): czone="az1"
     elif(opts==["B","A"]): czone="az2"
     elif(opts==["B","B"]): czone="dz1"
     elif(opts==["A","A"]): czone="dz2"
+    print('zone')
+    print(opts)
+    print(czone)
     return czone
 
 
