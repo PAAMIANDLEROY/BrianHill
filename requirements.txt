@@ -5,3 +5,4 @@ scipy
 sympy
 pywaffle
 mpld3
+yaml
