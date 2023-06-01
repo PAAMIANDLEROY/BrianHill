@@ -1,4 +1,6 @@
 #Import Part
+import os
+os.getcwd()
 import yaml #beug with streamlit. Need correction
 import matplotlib.pyplot as plt
 import matplotlib as mpl
