@@ -1,7 +1,7 @@
 Number_of_participant: 100
 Number_groups: 2
 Maximum_steps: 12
-
+test : 10
 Number_ball_green_yellow: 100
 Number_green: 76
 Winning_Amount: 20
