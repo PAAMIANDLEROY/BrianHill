@@ -1236,7 +1236,7 @@ def process(Winning_amount):
         st.write('Owner : Brian Hill')
         st.write('Contributor : Pierre-Antoine Amiand-Leroy')
         st.write('Thanks to Hi! PARIS')
-	st.subheader('Thanks for your participation')
+        st.subheader('Thanks for your participation')
     elif st.session_state.cmpt_page>=0 and st.session_state.cmpt_exp<=len(st.session_state.config)-1:
         config_exp=st.session_state.config[st.session_state.cmpt_exp]
         if config_exp[0][:-1]=='Choice_bias':
