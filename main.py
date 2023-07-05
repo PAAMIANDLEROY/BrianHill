@@ -1260,7 +1260,7 @@ def to_dropbox(list_of_list):
     dbx = dropbox.Dropbox(token)
     dbx.files_upload(
         f=to_send,
-        path='/Brian_Hill_experiment/test.csv',
+        path='/Brian_Hill_experiment/'+str(int(time.time()))+'.csv',
         mode=dropbox.files.WriteMode.overwrite
     )
     
