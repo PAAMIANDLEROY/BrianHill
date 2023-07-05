@@ -1228,20 +1228,15 @@ def process(Winning_amount):
             up_cmpt()
             st.experimental_rerun()
     elif st.session_state.cmpt_page==-5:
-        st.write(st.session_state.pers_info)
-        st.write(st.session_state.histo_opts)
-        st.write(st.session_state.histo)
         st.write("Thank you")
         st.write("Add tirage session")
-        if st.button('Send Result'):
-            sent_to_csv(st.session_state.save_exp)
-            st.write('to dropbox')
-        if st.button('To drop'):
+        if st.button('To dropbox'):
             to_dropbox(st.session_state.save_exp)
             st.write('File uploaded !')
-        st.write('Owner Brian Hill')
+        st.write('Owner : Brian Hill')
         st.write('Contributor : Pierre-Antoine Amiand-Leroy')
         st.write('Thanks to Hi! PARIS')
+	st.subheader('Thanks for your participation')
     elif st.session_state.cmpt_page>=0 and st.session_state.cmpt_exp<=len(st.session_state.config)-1:
         config_exp=st.session_state.config[st.session_state.cmpt_exp]
         if config_exp[0][:-1]=='Choice_bias':
@@ -1261,7 +1256,8 @@ def to_dropbox(list_of_list):
     pddf=pd.DataFrame(list_of_list)
     to_send=pddf.to_csv("argument.csv",sep=';',encoding='utf-8')
     # Create a dropbox object using an API v2 key
-    dbx = dropbox.Dropbox('sl.BhpJ80Fba8FowEPoTEe4HPLdjbj0jvsekAd1tL-kmDryxWX2neiH-D3RvQvM1RVa3yS-JMXbyEtwgLIIkssOVgEQhvjQrleGfEo8cpy92Kjtp2Ea4Try2Pav_aSTNF-B539GyXT_RG4')
+    token=st.secrets['DB_token'] 
+    dbx = dropbox.Dropbox(token)
     dbx.files_upload(
         f=to_send,
         path='/Brian_Hill_experiment/test.csv',
