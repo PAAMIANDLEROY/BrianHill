@@ -737,7 +737,6 @@ def front_choice_bias(Winning_amount,Number_of_ball,Freq_green):
                 opts=st.session_state.histo_opts[-2:]
                 bet, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile=validation([red,blue],opts)
                 list_save=[time.strftime("%Y/%m/%d %Hh%M")]+st.session_state.pers_info+[int(st.session_state.cmpt_exp),finished,int(st.session_state.cmpt_page),list(st.session_state.save_bet),list(st.session_state.histo_opts),nzdict]
-                print(st.session_state.histo_opts)
                 st.session_state.save_exp.append(list_save)
                 st.session_state.new_bet=bet
                 if finished:
@@ -837,10 +836,10 @@ def front_choice_unbias(Winning_amount,Number_of_ball,Freq_green):
                 if st.session_state.cmpt_page%2==0:
                     opts=st.session_state.histo_opts[-2:]
                     bet, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile=validation(st.session_state.slider_value,opts)
-                    print(bet, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile)
+                    list_save=[time.strftime("%Y/%m/%d %Hh%M")]+st.session_state.pers_info+[int(st.session_state.cmpt_exp),finished,int(st.session_state.cmpt_page),list(st.session_state.save_bet),list(st.session_state.histo_opts),nzdict]
+                    st.session_state.save_exp.append(list_save)
                     st.session_state.new_bet=bet##a verifier
                     st.session_state.finish=finished
-                    print('fini ',finished)
                     st.experimental_rerun()
                 else:
                     st.experimental_rerun()
@@ -942,10 +941,13 @@ def finish_part(red,blue,grey):
             elif values_recup[1]!=blue and values_recup[0]!=red:
                 st.write('You can move only one handles')
             else:
+                finished=1
+                list_save=[time.strftime("%Y/%m/%d %Hh%M")]+st.session_state.pers_info+[int(st.session_state.cmpt_exp),finished,int(st.session_state.cmpt_page),list(st.session_state.save_bet),list(st.session_state.histo_opts),{}]
+                st.session_state.save_exp.append(list_save)
                 st.session_state.histo.append(st.session_state.histo_opts)
                 st.session_state.all_save_bet.append(st.session_state.save_bet)
                 st.session_state.save_bet=[]
-                st.session_state.histo_ops=[]
+                st.session_state.histo_opts=[]
                 st.session_state.finish=0
                 init()
                 st.session_state.new_bet=[30,30]
@@ -1008,13 +1010,12 @@ def front_choice_stated(Winning_amount,Number_of_ball,Freq_green):
     values_recup=st.session_state.slider_value
     col1,col3, col2 = st.columns([2,1,2])
     with col1:
-        
-#        col1a,col1b=st.columns([2.3,3])#COL1A;COL1B
-#        with col1a:
-         st.subheader("  ")
-         st.subheader("Option A")
-         st.subheader(str(Number_of_ball)+" draws were made, with "+str(int(Number_of_ball*Freq_green))+" green balls.")
-         st.subheader("The others were yellow")
+        col1a,col1b=st.columns([2.3,3])#COL1A;COL1B
+        with col1a:
+            st.subheader("  ")
+            st.subheader("Option A")
+            st.subheader(str(Number_of_ball)+" draws were made, with "+str(int(Number_of_ball*Freq_green))+" green balls.")
+            st.subheader("The others were yellow")
 ##            fig3 = plt.figure(
 ##                FigureClass=Wf,
 ##                rows=int(math.sqrt(Number_of_ball)),
@@ -1024,20 +1025,20 @@ def front_choice_stated(Winning_amount,Number_of_ball,Freq_green):
 ##                characters='⬤',
 ##                font_size=20)
 ##            st.pyplot(fig3)
-##        with col1b:
-##            st.subheader("  ")
-##            st.subheader("Option A")
-##            fig1, ax1=plt.subplots()#figsize=(4,4))
-##            x1,y1 = ([0,-0.1,0], [-0.1,0,0.1])
-##            line1 = mpl.lines.Line2D(x1,y1, lw=10., alpha=0.9)
-##            value_money=st.session_state.cmpt_page%2*Winning_amount
-##            plt.text(0.1, 0.1, "Green: "+str(value_money)+"€", ha="center", family='sans-serif', size=30)
-##            plt.text(0.1, -0.1, "Yellow: "+str(20-value_money)+"€", ha="center", family='sans-serif', size=30)
-##            ax1.add_line(line1)
-##            plt.axis('equal')
-##            plt.axis('off')
-##            plt.tight_layout()
-##            st.pyplot(fig1)
+        with col1b:
+            st.subheader("  ")
+            st.subheader("Option A")
+            fig1, ax1=plt.subplots()#figsize=(4,4))
+            x1,y1 = ([0,-0.1,0], [-0.1,0,0.1])
+            line1 = mpl.lines.Line2D(x1,y1, lw=10., alpha=0.9)
+            value_money=st.session_state.cmpt_page%2*Winning_amount
+            plt.text(0.1, 0.1, "Green: "+str(value_money)+"€", ha="center", family='sans-serif', size=30)
+            plt.text(0.1, -0.1, "Yellow: "+str(20-value_money)+"€", ha="center", family='sans-serif', size=30)
+            ax1.add_line(line1)
+            plt.axis('equal')
+            plt.axis('off')
+            plt.tight_layout()
+            st.pyplot(fig1)
     with col3:
         st.subheader("  ")
         st.subheader("Experiment number "+str(st.session_state.cmpt_exp+1))
@@ -1053,8 +1054,8 @@ def front_choice_stated(Winning_amount,Number_of_ball,Freq_green):
             if st.session_state.cmpt_page%2==0:
                 opts=st.session_state.histo_opts[-2:]
                 bet, finished, sumlen, nzdict, ccomments, finishedBefMaxIter, finishedApartAlgo, useReturn, useWhile=validation([red,blue],opts)
-                st.session_state.save_exp.append([time.strftime("%Y/%m/%d %Hh%M")]+st.session_state.pers_info+[st.session_state.cmpt_exp,finished,st.session_state.cmpt_page,st.session_state.save_bet,st.session_state.histo_opts,nzdict])
-                
+                list_save=[time.strftime("%Y/%m/%d %Hh%M")]+st.session_state.pers_info+[int(st.session_state.cmpt_exp),finished,int(st.session_state.cmpt_page),list(st.session_state.save_bet),list(st.session_state.histo_opts),nzdict]
+                st.session_state.save_exp.append(list_save)
                 st.session_state.new_bet=bet
                 #st.session_state.save_bet=bet
                 if finished:
@@ -1070,12 +1071,11 @@ def front_choice_stated(Winning_amount,Number_of_ball,Freq_green):
                     st.write("It's finished, we will send the results")
             st.experimental_rerun()
     with col2:
-        
-#        col2a,col2b=st.columns([3,2.3])
-#        with col2b:
-        st.subheader("  ")
-        st.subheader("Option B")
-        st.subheader("In this urn, you have "+str(red)+" red balls, "+str(blue)+" blue balls and "+str(grey)+" blue or red.")
+        col2a,col2b=st.columns([3,2.3])
+        with col2b:
+            st.subheader("  ")
+            st.subheader("Option B")
+            st.subheader("In this urn, you have "+str(red)+" red balls, "+str(blue)+" blue balls and "+str(grey)+" blue or red.")
 ##            fig4 = plt.figure(
 ##                FigureClass=Wf,
 ##                rows=10,
@@ -1086,21 +1086,21 @@ def front_choice_stated(Winning_amount,Number_of_ball,Freq_green):
 ##                font_size=20,
 ##                )
 ##            st.pyplot(fig4)
-##        with col2a:
-##            st.subheader("  ")
-##            st.subheader("  ")
-##            st.subheader("  ")
-##            fig3, ax3=plt.subplots()#figsize=(4,4))
-##            x3,y3 = ([0,0.1,0], [-0.1,0,0.1])
-##            line3 = mpl.lines.Line2D(x3,y3, lw=10., alpha=0.9)
-##            value_money=st.session_state.cmpt_page%2*Winning_amount
-##            plt.text(-0.1, 0.1, "Red: "+str(value_money)+"€", ha="center", family='sans-serif', size=30)
-##            plt.text(-0.1, -0.1, "Blue: "+str(20-value_money)+"€", ha="center", family='sans-serif', size=30)
-##            ax3.add_line(line3)
-##            plt.axis('equal')
-##            plt.axis('off')
-##            plt.tight_layout()
-##            st.pyplot(fig3)    
+        with col2a:
+            st.subheader("  ")
+            st.subheader("  ")
+            st.subheader("  ")
+            fig3, ax3=plt.subplots()#figsize=(4,4))
+            x3,y3 = ([0,0.1,0], [-0.1,0,0.1])
+            line3 = mpl.lines.Line2D(x3,y3, lw=10., alpha=0.9)
+            value_money=st.session_state.cmpt_page%2*Winning_amount
+            plt.text(-0.1, 0.1, "Red: "+str(value_money)+"€", ha="center", family='sans-serif', size=30)
+            plt.text(-0.1, -0.1, "Blue: "+str(20-value_money)+"€", ha="center", family='sans-serif', size=30)
+            ax3.add_line(line3)
+            plt.axis('equal')
+            plt.axis('off')
+            plt.tight_layout()
+            st.pyplot(fig3)    
 
 ##    if st.session_state.cmpt_page>=2:
 ##
@@ -1236,6 +1236,9 @@ def process(Winning_amount):
         if st.button('Send Result'):
             sent_to_csv(st.session_state.save_exp)
             st.write('to dropbox')
+        if st.button('To drop'):
+            to_dropbox(st.session_state.save_exp)
+            st.write('File uploaded !')
         st.write('Owner Brian Hill')
         st.write('Contributor : Pierre-Antoine Amiand-Leroy')
         st.write('Thanks to Hi! PARIS')
@@ -1250,7 +1253,23 @@ def process(Winning_amount):
     else:
         st.session_state.cmpt_page=-5
         st.experimental_rerun()
-#beug with streamlit. Need correction
+
+def to_dropbox(list_of_list):
+    import dropbox
+
+    filename = "argument.csv"
+    pddf=pd.DataFrame(list_of_list)
+    to_send=pddf.to_csv("argument.csv",sep=';',encoding='utf-8')
+    # Create a dropbox object using an API v2 key
+    dbx = dropbox.Dropbox('sl.BhpJ80Fba8FowEPoTEe4HPLdjbj0jvsekAd1tL-kmDryxWX2neiH-D3RvQvM1RVa3yS-JMXbyEtwgLIIkssOVgEQhvjQrleGfEo8cpy92Kjtp2Ea4Try2Pav_aSTNF-B539GyXT_RG4')
+    dbx.files_upload(
+        f=to_send,
+        path='/Brian_Hill_experiment/test.csv',
+        mode=dropbox.files.WriteMode.overwrite
+    )
+    
+    return print('File uploaded !')
+
 def load_yaml():
     with open('parameter.yml', 'r', encoding='utf8') as file:
         data = yaml.safe_load(file)
@@ -1314,19 +1333,6 @@ if __name__=='__main__':
 #st.image([PA,GAE,Pierre],width=110)
 
 
-
-def to_dropbox():
-    import dropbox
-
-    filename = "argument.csv"
-
-    # Create a dropbox object using an API v2 key
-    dbx = dropbox.Dropbox('k4hp6g0k9nhfo8h')
-
-    with open(filename, 'rb') as f:
-        dbx.files_upload(f.read(), path=f"/test.csv")
-    
-    return print('File uploaded !')
 
 
 
