@@ -6,3 +6,5 @@ sympy
 pywaffle
 mpld3
 pyyaml
+dropbox
+pandas
